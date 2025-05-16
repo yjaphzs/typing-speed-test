@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: "Space Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffff;
+    background: #090909;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#wordsWrapper{
+	position: relative;
+	display: inline-block;
+    max-width: 70%;
+}
+
+.words, .word{
+	user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+}
+
+.words {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: center;
+	padding: 0;
+    margin: 0 auto;
+}
+
+.word{
+	display: inline-block;
+	position: relative;
+	font-weight: 500;
+	color: #444444;
+    font-size: 2rem;
+    line-height: 2rem;
+    margin: .25em .3em;
+    font-variant: no-common-ligatures;
+    border-bottom: 2px solid transparent;
+}
+
+.correct {
+	color: #fbb217;
+}
+
+.incorrect {
+	color: #ff4d4d;
+}
+
+#caret {
+	position: absolute;
+	width: 3px;
+	background: #fbb217;
+	transition: left 0.05s, top 0.05s;
+	z-index: 10;
+	animation: caret-blink 1s steps(1, end) infinite;
+}
+
+
+@keyframes caret-blink {
+  from, to { background: transparent }
+  50% { background: #fbb217 }
+}
