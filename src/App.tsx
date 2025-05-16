@@ -10,6 +10,10 @@ function App() {
     const [wordsToType] = useState(
         () => generate({ exactly: 30, minLength: 2, maxLength: 25 }) as string[]
     );
+    const [caretPos, setCaretPos] = useState<{ word: number; char: number }>({
+        word: 0,
+        char: 0,
+    });
     const [input, setInput] = useState<string>("");
 
     useEffect(() => {
@@ -87,7 +91,7 @@ function App() {
                             : null;
 
                     return (
-                        <WordBox key={key} word={wordToType}>
+                        <WordBox key={key}>
                             {chars}
                             {extraChars}
                         </WordBox>

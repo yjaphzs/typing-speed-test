@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 
 interface Props {
-    word: string;
     children?: ReactNode;
 }
 
-function WordBox({ word, children }: Props) {
+function WordBox({ children }: Props) {
     return <div className="word">{children}</div>;
 }
 
