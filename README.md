@@ -2,8 +2,6 @@
 
 A simple and minimal web application to test and improve your typing speed, built using **ReactJS (TypeScript)** + **Vite**.
 
-![Typing Speed Test Screenshot](https://raw.githubusercontent.com/yjaphzs/typing-speed-test/main/preview.png)
-
 ## 🚀 Features
 
 - Real-time typing speed tracking (WPM)
