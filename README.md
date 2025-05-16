@@ -30,8 +30,4 @@ git clone https://github.com/yjaphzs/typing-speed-test.git
 
 # Navigate to the project directory
 cd typing-speed-test
-
-# Install dependencies
-yarn
-# or
 npm install
