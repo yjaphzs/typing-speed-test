@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { generate } from "random-words";
 
 import Caret from "./components/Caret";
-import WordBox from "./components/WordBox";
+import Words from "./components/Words";
+import Word from "./components/Word";
+import Letter from "./components/Letter";
 
 function App() {
     const [wordsToType] = useState(
@@ -17,10 +19,11 @@ function App() {
     const [input, setInput] = useState<string>("");
 
     useEffect(() => {
+        const allowedChars =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-+=[]{};:'\",.<>/?\\|`~ ";
+
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (
-                /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{};:'",.<>/?\\|`~ ]$/.test(e.key)
-            ) {
+            if (allowedChars.includes(e.key)) {
                 setInput((prev) => {
                     const lastSpaceIndex = prev.lastIndexOf(" ");
                     const currentWord = prev.slice(lastSpaceIndex + 1);
@@ -55,49 +58,56 @@ function App() {
     return (
         <div id="wordsWrapper">
             <Caret left={7} top={11} height={30} />
-            <div className="words">
+            <Words>
                 {wordsToType.map((wordToType: string, key: number) => {
                     const typedWord = wordsTyped[key] || "";
 
-                    const chars = wordToType.split("").map((char, charIdx) => {
-                        let className = "";
-                        if (typedWord[charIdx] === undefined) {
-                            className = "";
-                        } else if (typedWord[charIdx] === char) {
-                            className = "correct";
-                        } else {
-                            className = "incorrect";
-                        }
-                        return (
-                            <span key={charIdx} className={className}>
-                                {char}
-                            </span>
-                        );
-                    });
+                    // get all actual typed letters (correct and incorrect)
+                    const letters = wordToType
+                        .split("")
+                        .map((letter, index) => {
+                            let status = "not-typed";
+                            if (typedWord[index] === undefined) {
+                                status = "";
+                            } else if (typedWord[index] === letter) {
+                                status = "correct";
+                            } else {
+                                status = "incorrect";
+                            }
+                            return (
+                                // render letters with their status
+                                <Letter key={index} status={status}>
+                                    {letter}
+                                </Letter>
+                            );
+                        });
 
-                    const extraChars =
+                    // get all extra letters (typed but not in the word to type)
+                    const extraLetters =
                         typedWord.length > wordToType.length
                             ? typedWord
                                   .slice(wordToType.length)
                                   .split("")
-                                  .map((char, idx) => (
-                                      <span
-                                          key={`extra-${idx}`}
-                                          className="incorrect"
+                                  .map((letter, index) => (
+                                      // render extra letters with incorrect status
+                                      <Letter
+                                          key={`extra-${index}`}
+                                          status="incorrect"
                                       >
-                                          {char}
-                                      </span>
+                                          {letter}
+                                      </Letter>
                                   ))
                             : null;
 
+                    // render the word box with letters and extra letters
                     return (
-                        <WordBox key={key}>
-                            {chars}
-                            {extraChars}
-                        </WordBox>
+                        <Word key={key}>
+                            {letters}
+                            {extraLetters}
+                        </Word>
                     );
                 })}
-            </div>
+            </Words>
         </div>
     );
 }
