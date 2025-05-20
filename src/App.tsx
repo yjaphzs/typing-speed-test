@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { generate } from "random-words";
 
 import Caret from "./components/Caret";
+import Counter from "./components/Counter";
 import Words from "./components/Words";
 import Word from "./components/Word";
 import Letter from "./components/Letter";
@@ -88,11 +89,10 @@ function App() {
 
     return (
         <div id="wordsWrapper">
-            <div id="wordsTypedCounterText">
-                <span>
-                    {completedWordsCount}/{wordsToType.length}
-                </span>
-            </div>
+            <Counter
+                completedWordsCount={completedWordsCount}
+                wordsToTypeCount={wordsToType.length}
+            />
             <Caret left={7} top={55} height={30} />
             <Words>
                 {wordsToType.map((wordToType: string, key: number) => {
