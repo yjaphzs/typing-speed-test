@@ -89,11 +89,16 @@ function App() {
 
     return (
         <div id="wordsWrapper">
+            {/* Render the counter with the number of completed words and total words */}
             <Counter
                 completedWordsCount={completedWordsCount}
                 wordsToTypeCount={wordsToType.length}
             />
+
+            {/* // Render the caret position based on the current word and character */}
             <Caret left={7} top={55} height={30} />
+
+            {/* // Render the words to type */}
             <Words>
                 {wordsToType.map((wordToType: string, key: number) => {
                     const typedWord = wordsTyped[key] || "";
