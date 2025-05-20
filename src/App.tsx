@@ -17,6 +17,8 @@ function App() {
         char: 0,
     });
     const [input, setInput] = useState<string>("");
+    const [wordsTypedCount, setWordsTypedCount] = useState<number>(0);
+    const wordsTyped = input.trim().split(/\s+/).filter(Boolean);
 
     useEffect(() => {
         const allowedChars =
@@ -41,7 +43,28 @@ function App() {
                     return prev + e.key;
                 });
             } else if (e.key === "Backspace") {
-                setInput((prev) => prev.slice(0, -1));
+                setInput((prev) => {
+                    // Create an array of words typed so far, different to `wordsTyped`
+                    let newWordsTyped = prev
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean);
+
+                    // The current word index is the number of words minus 1 (since array is 0-based)
+                    let currentWordIndex = newWordsTyped.length - 1;
+
+                    // If the last character is a space, the user is at the next word
+                    if (prev.endsWith(" ")) {
+                        if (
+                            newWordsTyped[currentWordIndex] ===
+                            wordsToType[currentWordIndex]
+                        ) {
+                            return prev;
+                        }
+                    }
+
+                    return prev.slice(0, -1);
+                });
             }
         };
 
@@ -49,10 +72,9 @@ function App() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
 
-    const wordsTyped = input.trim().split(/\s+/).filter(Boolean);
-
     useEffect(() => {
-        console.log(wordsTyped);
+        console.log(wordsTyped); // Log the words typed
+        console.log(wordsTyped.length); // Log the number of words typed
     }, [wordsTyped]);
 
     return (
