@@ -32,6 +32,13 @@ body {
     max-width: 70%;
 }
 
+#wordsTypedCounterText{
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 2rem;
+    margin: .25em .3em;
+}
+
 .words, .word{
 	user-select: none;
     -webkit-user-select: none;
