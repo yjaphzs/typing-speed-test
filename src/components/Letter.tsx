@@ -6,7 +6,18 @@ interface Props {
 }
 
 function Letter({ children, status }: Props) {
-    return <span className={status}>{children}</span>;
+    return (
+        <span
+            className={status}
+            style={{
+                display: "inline-block",
+                width: "20px",
+                textAlign: "center",
+            }}
+        >
+            {children}
+        </span>
+    );
 }
 
 export default Letter;

@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { generate } from "random-words";
 
 import Caret from "./components/Caret";
@@ -13,13 +13,60 @@ function App() {
     const [wordsToType] = useState(
         () => generate({ exactly: 50, minLength: 2, maxLength: 25 }) as string[]
     );
-    const [caretPos, setCaretPos] = useState<{ word: number; char: number }>({
-        word: 0,
-        char: 0,
-    });
     const [input, setInput] = useState<string>("");
     const [completedWordsCount, setCompletedWordsCount] = useState<number>(0);
     const wordsTyped = input.trim().split(/\s+/).filter(Boolean);
+
+    // --- Caret Position Calculation ---
+    const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const [caretPos, setCaretPos] = useState({ left: 7, top: 55 });
+
+    const LETTER_WIDTH = 20;
+
+    // Determine caret's word and character index
+    const isAtWordBoundary = input.endsWith(" ");
+    const caretWordIndex = isAtWordBoundary
+        ? wordsTyped.length
+        : wordsTyped.length - 1;
+    const caretCharIndex = isAtWordBoundary
+        ? 0
+        : wordsTyped[caretWordIndex]?.length ?? 0;
+
+    // Update caret position when word/char index changes or window resizes
+    useLayoutEffect(() => {
+        function updateCaret() {
+            const wordEl = wordRefs.current[caretWordIndex];
+            if (wordEl) {
+                const rect = wordEl.getBoundingClientRect();
+                const parentRect =
+                    wordEl.parentElement?.getBoundingClientRect();
+                const newLeft =
+                    rect.left -
+                    (parentRect?.left ?? 0) +
+                    caretCharIndex * LETTER_WIDTH;
+                const newTop = rect.top - (parentRect?.top ?? 0) + 45;
+
+                // Only update if changed to avoid infinite loop
+                setCaretPos((pos) => {
+                    if (pos.left !== newLeft || pos.top !== newTop) {
+                        return { left: newLeft, top: newTop };
+                    }
+                    return pos;
+                });
+            } else {
+                setCaretPos((pos) => {
+                    if (pos.left !== 7 || pos.top !== 55) {
+                        return { left: 7, top: 55 };
+                    }
+                    return pos;
+                });
+            }
+        }
+        updateCaret();
+        window.addEventListener("resize", updateCaret);
+        return () => window.removeEventListener("resize", updateCaret);
+        // Only depend on caretWordIndex and caretCharIndex
+    }, [caretWordIndex, caretCharIndex]);
 
     useEffect(() => {
         const allowedChars =
@@ -88,15 +135,15 @@ function App() {
     }, []);
 
     return (
-        <div id="wordsWrapper">
+        <div id="typingTest">
             {/* Render the counter with the number of completed words and total words */}
             <Counter
                 completedWordsCount={completedWordsCount}
                 wordsToTypeCount={wordsToType.length}
             />
 
-            {/* // Render the caret position based on the current word and character */}
-            <Caret left={7} top={55} height={30} />
+            {/* Caret position updates as you type and as words wrap */}
+            <Caret left={caretPos.left} top={caretPos.top} height={30} />
 
             {/* // Render the words to type */}
             <Words>
@@ -142,7 +189,12 @@ function App() {
 
                     // render the word box with letters and extra letters
                     return (
-                        <Word key={key}>
+                        <Word
+                            key={key}
+                            ref={(el) => {
+                                wordRefs.current[key] = el;
+                            }}
+                        >
                             {letters}
                             {extraLetters}
                         </Word>
