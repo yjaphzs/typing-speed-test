@@ -135,73 +135,79 @@ function App() {
     }, []);
 
     return (
-        <div id="typingTest">
-            {/* Render the counter with the number of completed words and total words */}
-            <Counter
-                completedWordsCount={completedWordsCount}
-                wordsToTypeCount={wordsToType.length}
-            />
+        <>
+            {/* <div id="scoreboard">
+                <h1>Typing Test</h1>
+            </div> */}
 
-            {/* Caret position updates as you type and as words wrap */}
-            <Caret left={caretPos.left} top={caretPos.top} height={30} />
+            <div id="typingTest">
+                {/* Render the counter with the number of completed words and total words */}
+                <Counter
+                    completedWordsCount={completedWordsCount}
+                    wordsToTypeCount={wordsToType.length}
+                />
 
-            {/* // Render the words to type */}
-            <Words>
-                {wordsToType.map((wordToType: string, key: number) => {
-                    const typedWord = wordsTyped[key] || "";
+                {/* Caret position updates as you type and as words wrap */}
+                <Caret left={caretPos.left} top={caretPos.top} height={30} />
 
-                    // get all actual typed letters (correct and incorrect)
-                    const letters = wordToType
-                        .split("")
-                        .map((letter, index) => {
-                            let status = "not-typed";
-                            if (typedWord[index] === undefined) {
-                                status = "";
-                            } else if (typedWord[index] === letter) {
-                                status = "correct";
-                            } else {
-                                status = "incorrect";
-                            }
-                            return (
-                                // render letters with their status
-                                <Letter key={index} status={status}>
-                                    {letter}
-                                </Letter>
-                            );
-                        });
+                {/* // Render the words to type */}
+                <Words>
+                    {wordsToType.map((wordToType: string, key: number) => {
+                        const typedWord = wordsTyped[key] || "";
 
-                    // get all extra letters (typed but not in the word to type)
-                    const extraLetters =
-                        typedWord.length > wordToType.length
-                            ? typedWord
-                                  .slice(wordToType.length)
-                                  .split("")
-                                  .map((letter, index) => (
-                                      // render extra letters with incorrect status
-                                      <Letter
-                                          key={`extra-${index}`}
-                                          status="incorrect"
-                                      >
-                                          {letter}
-                                      </Letter>
-                                  ))
-                            : null;
+                        // get all actual typed letters (correct and incorrect)
+                        const letters = wordToType
+                            .split("")
+                            .map((letter, index) => {
+                                let status = "not-typed";
+                                if (typedWord[index] === undefined) {
+                                    status = "";
+                                } else if (typedWord[index] === letter) {
+                                    status = "correct";
+                                } else {
+                                    status = "incorrect";
+                                }
+                                return (
+                                    // render letters with their status
+                                    <Letter key={index} status={status}>
+                                        {letter}
+                                    </Letter>
+                                );
+                            });
 
-                    // render the word box with letters and extra letters
-                    return (
-                        <Word
-                            key={key}
-                            ref={(el) => {
-                                wordRefs.current[key] = el;
-                            }}
-                        >
-                            {letters}
-                            {extraLetters}
-                        </Word>
-                    );
-                })}
-            </Words>
-        </div>
+                        // get all extra letters (typed but not in the word to type)
+                        const extraLetters =
+                            typedWord.length > wordToType.length
+                                ? typedWord
+                                      .slice(wordToType.length)
+                                      .split("")
+                                      .map((letter, index) => (
+                                          // render extra letters with incorrect status
+                                          <Letter
+                                              key={`extra-${index}`}
+                                              status="incorrect"
+                                          >
+                                              {letter}
+                                          </Letter>
+                                      ))
+                                : null;
+
+                        // render the word box with letters and extra letters
+                        return (
+                            <Word
+                                key={key}
+                                ref={(el) => {
+                                    wordRefs.current[key] = el;
+                                }}
+                            >
+                                {letters}
+                                {extraLetters}
+                            </Word>
+                        );
+                    })}
+                </Words>
+            </div>
+        </>
     );
 }
 
